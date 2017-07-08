@@ -1,0 +1,19 @@
+version: '2'
+services:
+  mongo:
+    image: mongo:3.4.4
+    container_name: benindevelopers-directory-mongo
+    volumes:
+      - "/data/db/developers:/data/db/developers"
+  directory:
+    depends_on:
+      - mongo
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: benindevelopers-directory
+    command: ["./wait-for-it.sh", "mongo:27017", "--", "npm", "start"]
+    ports:
+      - "15400:15400"
+    links:
+      - mongo:mongo
